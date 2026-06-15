@@ -1,7 +1,9 @@
 {
   "name": "my-pair-site",
   "type": "module",
-  "engines": {"node": "20.x"},
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.10"
   }
