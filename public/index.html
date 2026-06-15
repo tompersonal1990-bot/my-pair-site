@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOM MINI BOT - Pair</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0f1c;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    padding: 30px 25px;
+    border-radius: 20px;
+    border: 1px solid #334155;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+  }
+  .logo {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #00f2ff, #0099ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 35px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #00f2ff, #0099ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+  .subtitle { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
+  
+  label { display: block; margin-bottom: 8px; color: #cbd5e1; font-size: 14px; }
+  input {
+    width: 100%;
+    padding: 14px;
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 15px;
+  }
+  input:focus { border-color: #00f2ff; }
+  
+  button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(90deg, #00f2ff, #0099ff);
+    border: none;
+    border-radius: 10px;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  
+  #result {
+    margin-top: 20px;
+    padding: 18px;
+    background: rgba(0, 242, 255, 0.1);
+    border: 1px solid #00f2ff;
+    border-radius: 10px;
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    color: #00ff88;
+    text-align: center;
+    display: none;
+  }
+  
+  .note { text-align: center; margin-top: 15px; font-size: 12px; color: #64748b; }
+  .footer { text-align: center; margin-top: 25px; font-size: 12px; color: #475569; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">⚡</div>
+    <h1>TOM MINI BOT</h1>
+    <p class="subtitle">Generate Your Pairing Code</p>
+    
+    <label>WhatsApp Number</label>
+    <input type="text" id="number" placeholder="8801XXXXXXXXX">
+    
+    <button id="btn" onclick="getCode()">🔑 Generate Pair Code</button>
+    
+    <div id="result"></div>
+    <p class="note">Code expires in 20 seconds. Enter in WhatsApp > Linked Devices > Link with phone number</p>
+    
+    <div class="footer">© 2026 TOM MINI BOT</div>
+  </div>
+
+<script>
+async function getCode() {
+  const num = document.getElementById('number').value.trim();
+  const btn = document.getElementById('btn');
+  const result = document.getElementById('result');
+  
+  if (!num || !num.startsWith('88')) {
+    alert('Enter valid number with 88 country code');
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.innerText = '⏳ Generating...';
+  result.style.display = 'none';
+  
+  try {
+    const res = await fetch(`/api/pair?number=${num}`);
+    const data = await res.json();
+    
+    if (data.code) {
+      result.innerText = data.code;
+      result.style.display = 'block';
+    } else {
+      alert(data.error || 'Failed to generate code');
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+  
+  btn.disabled = false;
+  btn.innerText = '🔑 Generate Pair Code';
+}
+</script>
+</body>
+</html>
