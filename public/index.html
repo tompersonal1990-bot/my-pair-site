@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY BOT - Pair Code</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0a;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    background: #111;
+    padding: 40px 30px;
+    border-radius: 20px;
+    border: 1px solid #222;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+  h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #00f2ff, #0099ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  p { color: #aaa; margin-bottom: 25px; font-size: 14px; }
+  input {
+    width: 100%;
+    padding: 14px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 15px;
+  }
+  input:focus { border-color: #00f2ff; }
+  button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #00f2ff, #0099ff);
+    border: none;
+    border-radius: 10px;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover { opacity: 0.8; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  #result {
+    margin-top: 20px;
+    padding: 15px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #00ff88;
+    display: none;
+  }
+  .note { margin-top: 15px; font-size: 12px; color: #666; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>MY BOT PAIR</h1>
+    <p>Enter your WhatsApp number with country code</p>
+    
+    <input type="text" id="number" placeholder="8801XXXXXXXXX">
+    <button id="btn" onclick="getCode()">Generate Pair Code</button>
+    
+    <div id="result"></div>
+    <p class="note">Code expires in 20 seconds. Enter quickly in WhatsApp > Link Device > Enter Code</p>
+  </div>
+
+<script>
+async function getCode() {
+  const num = document.getElementById('number').value.trim();
+  const btn = document.getElementById('btn');
+  const result = document.getElementById('result');
+  
+  if (!num || !num.startsWith('88')) {
+    alert('Enter valid number with country code 88');
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.innerText = 'Generating...';
+  result.style.display = 'none';
+  
+  try {
+    const res = await fetch(`/api/pair?number=${num}`);
+    const data = await res.json();
+    
+    if (data.code) {
+      result.innerText = data.code;
+      result.style.display = 'block';
+    } else {
+      alert(data.error || 'Failed to generate code');
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+  
+  btn.disabled = false;
+  btn.innerText = 'Generate Pair Code';
+}
+</script>
+</body>
+</html>
